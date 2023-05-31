@@ -1,16 +1,10 @@
 --- dwm.c
 +++ dwm.c
-@@ -1215,6 +1334,13 @@ maprequest(XEvent *e)
- 	static XWindowAttributes wa;
- 	XMapRequestEvent *ev = &e->xmaprequest;
- 
-+	Client *i;
-+	if ((i = wintosystrayicon(ev->window))) {
-+		sendevent(i->win, netatom[Xembed], StructureNotifyMask, CurrentTime, XEMBED_WINDOW_ACTIVATE, 0, systray->win, XEMBED_EMBEDDED_VERSION);
-+		resizebarwin(selmon);
-+		updatesystray();
-+	}
-+
- 	if (!XGetWindowAttributes(dpy, ev->window, &wa))
- 		return;
- 	if (wa.override_redirect)
+@@ -697,6 +697,7 @@ void
+ drawbar(Monitor *m)
+ {
+ 	int x, w, tw = 0;
++	int tlpad;
+ 	int boxs = drw->fonts->h / 9;
+ 	int boxw = drw->fonts->h / 6 + 2;
+ 	unsigned int i, occ = 0, urg = 0;
